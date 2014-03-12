@@ -166,18 +166,20 @@ class minify():
         self.string = self.read_file(self.file_to_minify)
         self.strip_comments  = re.sub(r'/\*[\s\S]*?\*/', '', self.string)
         self.strip_urls = re.sub(r'url\((["\'])([^)]*)\1\)', r'url(\2)', self.strip_comments)
-        self.strip_whitespace_and_linebreaks = self.strip_urls.replace('\n', '').replace(' ', '')
+        self.strip_whitespace_and_linebreaks = self.strip_urls.replace('\n', '')
+        self.strip_multiple_whitespaces = re.sub(' +', ' ', self.strip_whitespace_and_linebreaks)
 
-        self.write_file(self.strip_whitespace_and_linebreaks) # write minified css to file
+        self.write_file(self.strip_multiple_whitespaces) # write minified css to file
 
     """ js minifying """
     def js(self):
         self.string = self.read_file(self.file_to_minify)
         self.strip_comments  = re.sub(r'/\*[\s\S]*?\*/', '', self.string)
         self.strip_one_line_comments = re.sub(r'\/\/(.*)', '', self.strip_comments)
-        self.strip_whitespace_and_linebreaks = self.strip_one_line_comments.replace('\n', '').replace(' ', '')
+        self.strip_whitespace_and_linebreaks = self.strip_one_line_comments.replace('\n', '')
+        self.strip_multiple_whitespaces = re.sub(' +', ' ', self.strip_whitespace_and_linebreaks)
 
-        self.write_file(self.strip_whitespace_and_linebreaks) # write minified js to file
+        self.write_file(self.strip_multiple_whitespaces) # write minified js to file
 
 """ run script """
 if __name__ == '__main__':
@@ -190,4 +192,4 @@ if __name__ == '__main__':
         elif (sys.argv[1] == '-s') or (sys.argv[1] == '--scan-dir'):
             glob = glob()
     else:
-        mini = minify('help')
+        mini = minify('help', 2)

@@ -2,6 +2,7 @@
 
 """
 Notes: Better Support as a module
+Abstract classes better, creative service class, do not abuse the constructor, create klass to execute stuff.
 """
 
 import os, sys, re
@@ -13,8 +14,18 @@ class glob():
     """
 
     def __init__(self):
-        pass
 
+        self.glob_list = [] # set list for files to minify
+
+        for fname in os.listdir('.'):
+            if fname.endswith('.js') or fname.endswith('.css'):
+                self.glob_list.append(fname)
+
+        print('Found following files in your current directory:')
+        print(self.glob_list)
+
+        print('Minifying of these has begun.')
+        glob = minify(self.glob_list, 0)
 
 class concat():
 
@@ -24,12 +35,13 @@ class concat():
 
     def __init__(self, file_to_concat):
 
-        concat = minify(file_to_concat)
-        self.files_to_concat = []
+        concat = minify(file_to_concat, 2) # initiate minify class
+        self.files_to_concat = [] # set list for files to concat
 
         print('')
         print('Minifying done. Concatenating has begun.')
 
+        """ check if at least 2 files has been set as argument """
         if len(sys.argv) > 3:
             """ if file or sys.argv has not been inputted """
             if(file_to_concat == 'help'):
@@ -46,7 +58,7 @@ class concat():
             self.execute_concatenation()
         else:
             print('')
-            print('Concat has failed.')
+            print('Concat has failed. Set at least two files as argument to concat.')
             concat.help()
             sys.exit()
 
@@ -75,23 +87,19 @@ class minify():
         Minify files
     """
 
-    def __init__(self, file_to_minify):
+    def __init__(self, file_to_minify, range_from_argument):
 
-        if len(sys.argv) > 2:
-            """ if file or sys.argv has not been inputted """
-            if(file_to_minify == 'help'):
-                self.help()
-                sys.exit()
-            else:
-                for i in range(2, len(file_to_minify)):
-                    self.file_to_minify = file_to_minify[i]
-                    self.file_name = os.path.splitext(self.file_to_minify)
-                    self.file_name_minified = self.file_name[0] + '.min' + self.file_name[1]
-
-                    self.detect_file_type_and_execute()
-        else:
+        """ if file or sys.argv has not been inputted """
+        if(file_to_minify == 'help'):
             self.help()
             sys.exit()
+        else:
+            for i in range(range_from_argument, len(file_to_minify)):
+                self.file_to_minify = file_to_minify[i]
+                self.file_name = os.path.splitext(self.file_to_minify)
+                self.file_name_minified = self.file_name[0] + '.min' + self.file_name[1]
+
+                self.detect_file_type_and_execute()
 
     """ detect file type and execute """
     def detect_file_type_and_execute(self):
@@ -176,7 +184,7 @@ if __name__ == '__main__':
 
     if len(sys.argv) > 1:
         if (sys.argv[1] == '-m') or (sys.argv[1] == '--minify') :
-            mini = minify(sys.argv)
+            mini = minify(sys.argv, 2)
         elif (sys.argv[1] == '-c') or (sys.argv[1] == '--concat'):
             con = concat(sys.argv)
         elif (sys.argv[1] == '-s') or (sys.argv[1] == '--scan-dir'):

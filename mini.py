@@ -8,17 +8,46 @@ import os, sys, re
 
 class glob():
 
+    """
+        Scan files in current dir and minify them
+    """
+
     def __init__(self):
         pass
 
 
-class concat(minify):
+class concat():
+
+    """
+        Minify and concat files
+    """
 
     def __init__(self, file_to_concat):
+
+        concat = minify(file_to_concat)
+
+        """ if file or sys.argv has not been inputted """
+        if(file_to_concat == 'help'):
+            concat.minify.help()
+            sys.exit()
+        else:
+            for i in range(2, len(file_to_concat)):
+                self.file_to_concat = file_to_concat[i]
+                self.file_name = os.path.splitext(self.file_to_concat)
+                self.file_name_minified = self.file_name[0] + '.min' + self.file_name[1]
+
+                self.execute_concatenation()
+
+    """ execute concatenation for minified files """
+    def execute_concatenation(self):
         pass
 
 
 class minify():
+
+    """
+        Minify files
+    """
 
     def __init__(self, file_to_minify):
 
@@ -117,7 +146,7 @@ if __name__ == '__main__':
         if (sys.argv[1] == '-m') or (sys.argv[1] == '--minify') :
             mini = minify(sys.argv)
         elif (sys.argv[1] == '-c') or (sys.argv[1] == '--concat'):
-            con = concat()
+            con = concat(sys.argv)
         elif (sys.argv[1] == '-s') or (sys.argv[1] == '--scan-dir'):
             glob = glob()
     else:

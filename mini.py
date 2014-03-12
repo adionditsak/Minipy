@@ -1,21 +1,25 @@
 #!/usr/bin/env python
 
 """
-Todo:
-Globs method for compressing all js/css files in current dir
-Concatenating
-Support as a module
+Notes: Better Support as a module
 """
 
 import os, sys, re
 
 class glob():
-    pass
 
-class concat():
-    pass
+    def __init__(self):
+        pass
+
+
+class concat(minify):
+
+    def __init__(self, file_to_concat):
+        pass
+
 
 class minify():
+
     def __init__(self, file_to_minify):
 
         """ if file or sys.argv has not been inputted """
@@ -85,7 +89,7 @@ class minify():
         print('1): You are trying to compress a css or js file.')
         print('2): The file exists in your current folder.')
         print('3): You have not misspelled.')
-        print('Use like $ python mini.py [-m,-c,-g] [files]')
+        print('Use like $ python mini.py [-m|--minify,-c|--concat,-s|--scan-dir] [files]')
         print('')
 
     """ css minifying """
@@ -110,11 +114,11 @@ class minify():
 if __name__ == '__main__':
 
     if len(sys.argv) > 1:
-        if sys.argv[1] == '-m':
+        if (sys.argv[1] == '-m') or (sys.argv[1] == '--minify') :
             mini = minify(sys.argv)
-        elif sys.argv[1] == '-c':
+        elif (sys.argv[1] == '-c') or (sys.argv[1] == '--concat'):
             con = concat()
-        elif sys.argv[1] == '-g':
+        elif (sys.argv[1] == '-s') or (sys.argv[1] == '--scan-dir'):
             glob = glob()
     else:
         mini = minify('help')

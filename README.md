@@ -1,8 +1,14 @@
 Minipy
 ======
 
+#Description
+
 Minify and concatenate js + css files with automatic detection.
 
+#Installation
+Download, decompress, and setup.py install...
+
+#Usage
 As module you can eg. use it like this:
         
     import minipy.mini

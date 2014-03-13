@@ -1,4 +1,4 @@
-minipy
+Minipy
 ======
 
-Minify and concat js + css files project
+Minify and concatenate js + css files with automatic detection.

@@ -7,14 +7,27 @@ Abstract classes better, creative service class, do not abuse the constructor, c
 
 import os, sys, re
 
-class glob():
+class Minify():
 
     """
-        Scan files in current dir and minify them
+        Minify files
     """
 
     def __init__(self):
+        pass
 
+    """ run standard minifying """
+    def run(self, file_to_minify):
+
+        for i in xrange(0, len(file_to_minify)):
+            self.file_to_minify = file_to_minify[i]
+            self.file_name = os.path.splitext(self.file_to_minify)
+            self.file_name_minified = self.file_name[0] + '.min' + self.file_name[1]
+
+            self.detect_file_type_and_execute()
+
+    """ run minifying with files from current dir """
+    def glob(self):
         self.glob_list = [] # set list for files to minify
 
         for fname in os.listdir('.'):
@@ -25,81 +38,7 @@ class glob():
         print(self.glob_list)
 
         print('Minifying of these has begun.')
-        glob = minify(self.glob_list, 0)
-
-class concat():
-
-    """
-        Minify and concat files
-    """
-
-    def __init__(self, file_to_concat):
-
-        concat = minify(file_to_concat, 2) # initiate minify class
-        self.files_to_concat = [] # set list for files to concat
-
-        print('')
-        print('Minifying done. Concatenating has begun.')
-
-        """ check if at least 2 files has been set as argument """
-        if len(sys.argv) > 3:
-            """ if file or sys.argv has not been inputted """
-            if(file_to_concat == 'help'):
-                concat.help()
-                sys.exit()
-            else:
-                for i in range(2, len(file_to_concat)):
-                    self.file_to_concat = file_to_concat[i]
-                    self.file_name = os.path.splitext(self.file_to_concat)
-                    self.file_name_minified = self.file_name[0] + '.min' + self.file_name[1]
-
-                    self.files_to_concat.append(self.file_name_minified)
-
-            self.execute_concatenation()
-        else:
-            print('')
-            print('Concat has failed. Set at least two files as argument to concat.')
-            concat.help()
-            sys.exit()
-
-    """ execute concatenation for minified files """
-    def execute_concatenation(self):
-
-        if self.file_name[1] == '.css':
-            print('')
-            print('CSS files detected. Creating concat.css.')
-            self.concat_file = 'concat.css'
-        elif self.file_name[1] == '.js':
-            print('')
-            print('JS files detected. Creating concat.js.')
-            self.concat_file = 'concat.js'
-
-        """ write the concat file """
-        with open(self.concat_file, 'w+') as outfile:
-            for fname in self.files_to_concat:
-                with open(fname) as infile:
-                    for line in infile:
-                        outfile.write(line)
-
-class minify():
-
-    """
-        Minify files
-    """
-
-    def __init__(self, file_to_minify, range_from_argument):
-
-        """ if file or sys.argv has not been inputted """
-        if(file_to_minify == 'help'):
-            self.help()
-            sys.exit()
-        else:
-            for i in range(range_from_argument, len(file_to_minify)):
-                self.file_to_minify = file_to_minify[i]
-                self.file_name = os.path.splitext(self.file_to_minify)
-                self.file_name_minified = self.file_name[0] + '.min' + self.file_name[1]
-
-                self.detect_file_type_and_execute()
+        self.run(self.glob_list)
 
     """ detect file type and execute """
     def detect_file_type_and_execute(self):
@@ -119,24 +58,18 @@ class minify():
     """ read file """
     def read_file(self, filepath):
         try:
-            f = open(filepath, 'r')
+            with open(filepath, 'r') as f:
+                return f.read()
         except:
             self.help()
-            sys.exit()
-        finally:
-            return f.read()
-            f.close()
 
     """ write minified version to file """
     def write_file(self, filepath):
         try:
-            f = open(self.file_name_minified, 'w+')
+            with open(self.file_name_minified, 'w+') as f:
+                f.write(filepath)
         except:
             self.help()
-            sys.exit()
-        finally:
-            f.write(filepath)
-            f.close()
 
     """ calculate size difference """
     def size_calc(self):
@@ -147,19 +80,6 @@ class minify():
 
         print('Done - take a look at ' + self.file_name_minified)
         print('You have saved ' + str(self.file_size_saved) + ' bytes (' + str(self.file_size_saved_in_percentage) + '%)')
-
-    """ help instructions """
-    def help(self):
-        print('')
-        print('Instructions')
-        print('Make sure that:')
-        print('1): You are trying to compress a css or js file.')
-        print('2): The file exists in your current folder.')
-        print('3): You have not misspelled.')
-        print('Use like $ python mini.py [-m|--minify,-c|--concat,-s|--scan-dir] [files]')
-        print('Concat needs more than file as argument, to concat... obviously.')
-        print('...')
-        print('')
 
     """ css minifying """
     def css(self):
@@ -181,15 +101,81 @@ class minify():
 
         self.write_file(self.strip_multiple_whitespaces) # write minified js to file
 
-""" run script """
+    """ help instructions """
+    def help(self):
+        print('')
+        print('Instructions')
+        print('Make sure that:')
+        print('1): You are trying to compress a css or js file.')
+        print('2): The file exists in your current folder.')
+        print('3): You have not misspelled.')
+        print('Use like $ python mini.py [-m|--minify,-c|--concat,-s|--scan-dir] [files]')
+        print('Concat needs more than file as argument, to concat... obviously.')
+        print('...')
+        print('')
+
+
+class Concat():
+
+    """
+        Minify and concat files
+    """
+
+    def __init__(self):
+
+        mini = Minify() # initiate minify class
+        self.files_to_concat = [] # set list for files to concat
+
+    def run(self, file_to_concat):
+
+        mini.run(sys.argv[2:]) # run minifying
+
+        print('')
+        print('Minifying done. Concatenating has begun.')
+
+        for i in xrange(0, len(file_to_concat)):
+            self.file_to_concat = file_to_concat
+            self.file_name = os.path.splitext(self.file_to_concat)
+            self.file_name_minified = self.file_name[0] + '.min' + self.file_name[1]
+
+            self.files_to_concat.append(self.file_name_minified)
+
+        self.execute_concatenation() # run concatenation
+
+    """ execute concatenation for minified files """
+    def execute_concatenation(self):
+
+        if self.file_name[1] == '.css':
+            print('')
+            print('CSS files detected. Creating concat.css.')
+            self.concat_file = 'concat.css'
+        elif self.file_name[1] == '.js':
+            print('')
+            print('JS files detected. Creating concat.js.')
+            self.concat_file = 'concat.js'
+
+        """ write the concat file """
+        with open(self.concat_file, 'w+') as outfile:
+            for fname in self.files_to_concat:
+                with open(fname) as infile:
+                    for line in infile:
+                        outfile.write(line)
+
+
+""" run if main """
 if __name__ == '__main__':
 
-    if len(sys.argv) > 1:
+    mini = Minify()
+    con = Concat()
+
+    if len(sys.argv) > 2:
         if (sys.argv[1] == '-m') or (sys.argv[1] == '--minify') :
-            mini = minify(sys.argv, 2)
-        elif (sys.argv[1] == '-c') or (sys.argv[1] == '--concat'):
-            con = concat(sys.argv)
+            mini.run(sys.argv[2:])
         elif (sys.argv[1] == '-s') or (sys.argv[1] == '--scan-dir'):
-            glob = glob()
+            mini.glob()
+        elif (sys.argv[1] == '-c') or (sys.argv[1] == '--concat'):
+            con.run(sys.argv[2:])
+        else:
+            mini.help()
     else:
-        mini = minify('help', 2)
+        mini.help()

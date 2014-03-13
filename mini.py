@@ -14,7 +14,7 @@ class Minify():
     """ run standard minifying """
     def run(self, file_to_minify):
 
-        for i in xrange(0, len(file_to_minify)):
+        for i in range(len(file_to_minify)):
             self.file_to_minify = file_to_minify[i]
             self.file_name = os.path.splitext(self.file_to_minify)
             self.file_name_minified = self.file_name[0] + '.min' + self.file_name[1]
@@ -128,7 +128,7 @@ class Concat():
         print('')
         print('Minifying done. Concatenating has begun.')
 
-        for i in xrange(0, len(file_to_concat)):
+        for i in range(0, len(file_to_concat)):
             self.file_to_concat = file_to_concat
             self.file_name = os.path.splitext(self.file_to_concat)
             self.file_name_minified = self.file_name[0] + '.min' + self.file_name[1]
@@ -157,7 +157,7 @@ class Concat():
                         outfile.write(line)
 
 
-""" run if main """
+""" if run directly """
 if __name__ == '__main__':
 
     mini = Minify()

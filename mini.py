@@ -125,12 +125,10 @@ class Concat():
 
         mini = Minify() # initiate minify class
 
-        """
         if __name__ == '__main__':
             mini.run(sys.argv[2:]) # run minifying as cli
         else:
-            mini.run(sys.argv) # run minifying as module
-        """
+            mini.run(file_to_concat) # run minifying as module
 
         print('')
         print('Minifying done. Concatenating has begun.')

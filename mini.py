@@ -96,7 +96,6 @@ class Minify():
         print('Minifying of these has begun.')
         self.run(self.glob_list)
 
-
     """ help instructions """
     def help(self):
         print('')
@@ -125,10 +124,7 @@ class Concat():
 
         mini = Minify() # initiate minify class
 
-        if __name__ == '__main__':
-            mini.run(sys.argv[2:]) # run minifying as cli
-        else:
-            mini.run(file_to_concat) # run minifying as module
+        mini.run(file_to_concat) # run minifying
 
         print('')
         print('Minifying done. Concatenating has begun.')
@@ -168,7 +164,7 @@ if __name__ == '__main__':
     mini = Minify()
     con = Concat()
 
-    if len(sys.argv) > 2:
+    if len(sys.argv) > 1:
         if (sys.argv[1] == '-m') or (sys.argv[1] == '--minify') :
             mini.run(sys.argv[2:])
         elif (sys.argv[1] == '-s') or (sys.argv[1] == '--scan-dir'):

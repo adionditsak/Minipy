@@ -21,20 +21,6 @@ class Minify():
 
             self.detect_file_type_and_execute()
 
-    """ run minifying with files from current dir """
-    def glob(self):
-        self.glob_list = [] # set list for files to minify
-
-        for fname in os.listdir('.'):
-            if fname.endswith('.js') or fname.endswith('.css'):
-                self.glob_list.append(fname)
-
-        print('Found following files in your current directory:')
-        print(self.glob_list)
-
-        print('Minifying of these has begun.')
-        self.run(self.glob_list)
-
     """ detect file type and execute """
     def detect_file_type_and_execute(self):
         if self.file_name[1] == '.css':
@@ -96,6 +82,21 @@ class Minify():
 
         self.write_file(self.strip_multiple_whitespaces) # write minified js to file
 
+    """ run minifying with files from current dir """
+    def glob(self):
+        self.glob_list = [] # set list for files to minify
+
+        for fname in os.listdir('.'):
+            if fname.endswith('.js') or fname.endswith('.css'):
+                self.glob_list.append(fname)
+
+        print('Found following files in your current directory:')
+        print(self.glob_list)
+
+        print('Minifying of these has begun.')
+        self.run(self.glob_list)
+
+
     """ help instructions """
     def help(self):
         print('')
@@ -118,18 +119,24 @@ class Concat():
 
     def __init__(self):
 
-        mini = Minify() # initiate minify class
         self.files_to_concat = [] # set list for files to concat
 
     def run(self, file_to_concat):
 
-        mini.run(sys.argv[2:]) # run minifying
+        mini = Minify() # initiate minify class
+
+        """
+        if __name__ == '__main__':
+            mini.run(sys.argv[2:]) # run minifying as cli
+        else:
+            mini.run(sys.argv) # run minifying as module
+        """
 
         print('')
         print('Minifying done. Concatenating has begun.')
 
         for i in range(0, len(file_to_concat)):
-            self.file_to_concat = file_to_concat
+            self.file_to_concat = file_to_concat[i]
             self.file_name = os.path.splitext(self.file_to_concat)
             self.file_name_minified = self.file_name[0] + '.min' + self.file_name[1]
 

@@ -1,10 +1,5 @@
 #!/usr/bin/env python
 
-"""
-Notes: Better Support as a module
-Abstract classes better, creative service class, do not abuse the constructor, create klass to execute stuff.
-"""
-
 import os, sys, re
 
 class Minify():
